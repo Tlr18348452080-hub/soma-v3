@@ -3,7 +3,7 @@
 import numpy as np, sys, json
 from self_train import load, prep, feats
 
-SRC = '/tmp/selfseq_big.txt'
+SRC = sys.argv[1] if len(sys.argv) > 1 else '/tmp/selfseq_big.txt'
 eps = load(SRC); chunks = prep(eps)
 n = len(chunks); cut = int(n * 0.8); tr, va = chunks[:cut], chunks[cut:]
 
@@ -39,6 +39,6 @@ r6 = roll(va, 6); r24 = roll(va, 24)
 print('带截距: 单步 均值%.2f 中位%.2f | 6步 %.2f/%.2f | 24步 %.2f/%.2f' % (ss.mean(), np.median(ss), r6[0], r6[1], r24[0], r24[1]))
 out = {"D": 10, "DX": 58, "rmseDeg": round(r6[0], 2), "rollDeg": round(r24[0], 2),
        "ticks": int(sum(len(c[0]) for c in tr)), "src": "self-seq soma3d",
-       "A": W[:-1].T.tolist(), "b": W[-1].tolist()}
-json.dump(out, open('/tmp/spinal_new.json', 'w'))
+       "A": W[:-1].tolist()   # DX×D，不是 D×DX：spinal.h 按 58 行读, "b": W[-1].tolist()}
+json.dump(out, open('/tmp/spinal_new.json', 'w'), separators=(',', ':'))   # 必须紧凑：spinal_core 硬查 "DX":58
 print('→ /tmp/spinal_new.json')
