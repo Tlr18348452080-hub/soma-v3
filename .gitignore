@@ -1,0 +1,5 @@
+node_modules/
+cpp/soma3d
+*.bak
+debug.log
+brain/*.jsonl

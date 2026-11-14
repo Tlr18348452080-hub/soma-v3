@@ -1,0 +1,9 @@
+{
+  "note": "her reflex cache: what she has learned to do without thinking",
+  "slots": [
+    {"i":0,"why":"idle","vDes":0.5500,"arm":0.0000,"lean":0.0000,"wave":0.0000,"hits":2897},
+    {"i":5,"why":"fallen","vDes":0.0000,"arm":0.4500,"lean":0.3000,"wave":0.0000,"hits":4133},
+    {"i":6,"why":"spinal","vDes":0.5000,"arm":0.1500,"lean":0.1000,"wave":0.0000,"hits":1},
+    {"i":7,"why":"see","vDes":0.5500,"arm":0.3500,"lean":0.1200,"wave":1.2000,"hits":1999}
+  ]
+}

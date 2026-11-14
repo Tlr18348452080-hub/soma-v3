@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>soma3d · 蓝色大肥鱼的三维步态</title>
+<style>
+  :root { --blue:#4fa8ff; --deep:#050a16; }
+  * { box-sizing: border-box; }
+  html,body { margin:0; height:100%; overflow:hidden; background:var(--deep);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    color:#cfe4ff; -webkit-tap-highlight-color:transparent; }
+  canvas { display:block; }
+  #hud { position:fixed; left:14px; top:12px; font-size:12px; line-height:1.7;
+    pointer-events:none; text-shadow:0 0 8px #000; }
+  #hud b { color:#8fd0ff; font-weight:600; }
+  #hud .row { display:flex; gap:10px; }
+  #hud .k { color:#5f7fa8; width:52px; }
+  #btns { position:fixed; left:50%; transform:translateX(-50%); bottom:18px;
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  #intentBox { display:inline-flex; align-items:center; gap:8px; padding:6px 12px;
+    background:rgba(30,60,110,.55); border:1px solid rgba(90,160,255,.45); border-radius:10px; color:#cfe4ff; }
+  #intent { width:170px; accent-color:#5aa0ff; }
+  button { background:rgba(30,60,110,.55); color:#cfe4ff; border:1px solid rgba(90,160,255,.45);
+    border-radius:11px; padding:9px 15px; font-size:13px; backdrop-filter:blur(6px);
+    font-family:inherit; }
+  button:active { background:rgba(80,150,255,.65); }
+  #tip { position:fixed; right:14px; top:12px; font-size:11px; color:#4a6b93; text-align:right; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div class="row"><span class="k">速度</span><b id="v">0.00</b> m/s</div>
+  <div class="row"><span class="k">状态</span><b id="mode">站立</b></div>
+  <div class="row"><span class="k">侧移</span><b id="z">0.000</b> m</div>
+  <div class="row"><span class="k">摔倒</span><b id="falls">0</b></div>
+  <div class="row"><span class="k">骨长</span><b id="err">0.0000</b></div>
+  <div class="row"><span class="k">质心高</span><b id="vComY">0.000</b> m</div>
+  <div class="row"><span class="k">代谢</span><b id="vMetab">0</b> W</div>
+  <div class="row"><span class="k">疲劳</span><b id="vFat">0.00</b></div>
+  <div class="row"><span class="k">体温</span><b id="vTemp">37.0</b> °C</div>
+  <div class="row"><span class="k">大脑</span><b id="vBrain">空闲</b></div>
+</div>
+<div id="tip">拖动 = 转视角<br>滚轮 = 远近<br>F = 推倒</div>
+<div id="btns">
+  <span id="intentBox">
+    <label for="intent">想走多快</label>
+    <input id="intent" type="range" min="0" max="2" step="0.05" value="0">
+    <b id="intentVal">0.00</b>
+  </span>
+  <button id="bPushZ">侧推 →</button>
+  <button id="bPushX">前推 ↑</button>
+  <button id="bFall">摔倒 F</button>
+  <button id="bGetup">起身 G</button>
+</div>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
