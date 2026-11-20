@@ -1,4 +1,49 @@
-# soma3d · 从 2D 木偶到 3D 步态
+# SOMA — 给 AI 一副会走路的身体
+
+一个跑在手机上的 3D 角色实验：**她有一具 C++ 写的真身体**——60 Hz 的物理一直在跑，手脚怎么动由一枚矩阵脊髓自己算；大模型只是大脑，只在「情理之外」的时候被叫醒。
+
+她自己在三室一厅里走动、吃饭、睡觉、犯困、上厕所，撞到桌子会疼。你可以在面板上调她的激素、摸她的头，然后看她怎么反应。
+
+> 不是走路模拟器，也不是把每一帧丢给大模型。身体是方程，大脑是异步的。
+
+## 为什么值得看
+
+给 LLM 一个真身体，难的不是「画得像人」，是让 **60 Hz 的物理** 和 **0.3 Hz 的模型** 在同一具身体上不打架：
+
+- **身体**：18 节点 / 17 骨人形，侧向走真 LIPM + 足底捕获点，前后用速度伺服（真 LIPM 在这套参数下会 0.49 m/s 死锁，扫了四组参数才放弃）。
+- **脊髓**：58 维矩阵，60 Hz 增量 + 在线 LMS；权重不是手调的，是从 CMU mocap 和她自己的运动数据里拟合的（holdout 单步 0.98°）。
+- **大脑**：快脑 3 秒内回一张 JSON（`vDes / gx,gz / lean / armRaise`），慢脑在独立会话里规划；两个都不直接拽关节。
+- **落地**：摔倒由 PBD 体模型接管，能自己爬起来；撞床、撞桌子、撞墙都真的会挡。
+- **跑在手机上**：C++ 内核 60 秒仿真 9.25 ms，three.js 前端 60 fps。
+
+## 现在能跑
+
+```bash
+cd cpp && g++ -O2 -std=c++17 -o soma3d main.cpp && cd ..
+./restart.sh                 # 起在 8125
+# 浏览器打开 http://127.0.0.1:8125/
+```
+
+不开浏览器也能验：
+
+```bash
+cd cpp && ./soma3d --selftest   # 12 组断言
+./soma3d --bench                # 物理耗时
+```
+
+## English
+
+**SOMA is a humanoid body for AI agents, written in C++ and running at 60 Hz.**
+
+Not an animation player: the body is a physics simulation — a lateral LIPM with capture-point foot placement, an 18-node ragdoll that takes over when she falls, and a 58-dimensional spinal matrix fitted from motion-capture data (0.98° holdout error). An asynchronous LLM brain only outputs JSON intentions like `{"vDes":0.8,"gx":2.0,"gz":1.5}`; it never touches a joint.
+
+She lives in a three-room apartment rendered with three.js: walks between rooms, eats, sleeps, gets tired, and hurts when she bumps into a table. It runs on a phone.
+
+---
+
+# 技术细节
+
+下面是从 2D 木偶到 3D 步态、再到「她开始过日子」的完整开发记录。每一条坑都是量过的，留着，因为下一次改物理还会踩回去。
 
 C++ 物理内核 + WebSocket + three.js 实时渲染。2D 版（`/sdcard/dsh/soma-v2/`）保留为参考实现，
 3D 版是它的一次「换轴」重写：矢状面之外多了冠状面的动力学。
